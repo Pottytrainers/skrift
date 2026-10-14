@@ -1,0 +1,59 @@
+# Builds the free downloads, then installs and uses the Windows one from scratch on GitHub's free Windows machine,
+# exactly like a new user would (first-time setup, a real transcription, every export, the AI check).
+# Pushing a version tag (e.g. v1.0.0) also attaches the tested downloads to a GitHub Release.
+# The Mac download is tested on a real Mac: GitHub's Mac machines have no usable GPU for the Mac engines.
+name: Build and test downloads
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write  # only used by the release step, which runs only for version tags
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 deploy/build_release.py
+      - uses: actions/upload-artifact@v7
+        with:
+          name: downloads
+          path: dist/*
+          retention-days: 7
+
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]  # Linux works too (build with --linux, add ubuntu-latest + espeak-ng) once it's released
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v7  # only for deploy/ci_smoke.py
+      - uses: actions/download-artifact@v8
+        with:
+          name: downloads
+          path: dist
+      - name: Unpack the Windows download
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Expand-Archive dist/Skrift-windows.zip -DestinationPath unpacked
+      - name: Run it like a new user and check everything
+        run: python deploy/ci_smoke.py unpacked/Skrift
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: downloads
+          path: dist
+      - run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

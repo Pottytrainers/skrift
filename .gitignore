@@ -1,0 +1,26 @@
+.venv/
+data/
+__pycache__/
+*.pyc
+bench/*.wav
+bench/*.json
+bench/*.vtt
+bench/*.log
+bench/*.meta.txt
+build/
+dist/
+.DS_Store
+*.part
+# local developer notes (personal setup, session notes)
+DEVNOTES.md
+# benchmark media, captions and outputs from third-party videos stay local; the scripts are shared
+bench/*.pcm
+bench/*.m4a
+bench/*.mp3
+bench/*.srt
+bench/*.json3
+bench/*.txt
+# test cases quoting real videos / people
+bench/meaning_cases.py
+bench/regions_test.py
+deploy/Skrift phone QR.png

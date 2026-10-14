@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.skrift.app</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__ROOT__/.venv/bin/python</string>
+    <string>__ROOT__/deploy/mac/launcher.py</string>
+  </array>
+  <!-- launchd listens here while Skrift sleeps, and starts it on the first visit. -->
+  <key>Sockets</key>
+  <dict>
+    <key>Web</key>
+    <array>
+      <dict>
+        <key>SockServiceName</key><string>__PORT__</string>
+        <key>SockFamily</key><string>IPv4</string>
+      </dict>
+      <dict>
+        <key>SockServiceName</key><string>__PORT__</string>
+        <key>SockFamily</key><string>IPv6</string>
+      </dict>
+    </array>
+  </dict>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <!-- yt-dlp needs deno (YouTube) and ffmpeg from Homebrew -->
+    <key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>IDLE_EXIT_MINUTES</key><string>__IDLE__</string>
+    <key>PYTHONUNBUFFERED</key><string>1</string>
+  </dict>
+  <key>ProcessType</key><string>Interactive</string>
+  <key>StandardOutPath</key><string>__HOME__/Library/Logs/Skrift.log</string>
+  <key>StandardErrorPath</key><string>__HOME__/Library/Logs/Skrift.log</string>
+</dict>
+</plist>

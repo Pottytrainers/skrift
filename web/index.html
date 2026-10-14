@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Skrift</title>
+  <meta name="theme-color" content="#0a1120" />
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/static/icon-180.png" />
+  <link rel="stylesheet" href="/static/fonts/fonts.css" />
+  <link rel="stylesheet" href="/static/style.css?v=3" />
+</head>
+<body>
+  <header class="top">
+    <a href="/" class="brand" data-link>
+      <img class="mark" src="/static/icon.svg" alt="" />
+      <span>Skrift</span>
+    </a>
+    <nav>
+      <a href="/" data-link data-nav="home">Transcripts</a>
+      <a href="/search" data-link data-nav="search">Search</a>
+      <a href="/settings" data-link data-nav="settings">Settings</a>
+    </nav>
+  </header>
+
+  <main id="view"></main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js?v=2"></script>
+</body>
+</html>

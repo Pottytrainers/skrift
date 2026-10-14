@@ -1,0 +1,40 @@
+[project]
+name = "skrift"
+version = "1.0.0"
+description = "Free, private, unlimited transcription for YouTube, Twitch and video/audio files."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # Apple-chip Macs: engines that run on the Mac's GPU
+    "mlx-whisper==0.4.3; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "parakeet-mlx==0.5.3; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "mlx-lm==0.32.0; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    # Windows, Linux and Intel Macs: the same models through cross-platform runtimes
+    "sherpa-onnx==1.13.8; sys_platform != 'darwin' or platform_machine != 'arm64'",
+    # sherpa-onnx needs this (it carries the speech runtime), but its metadata is lost from the lock file
+    "sherpa-onnx-core==1.13.8; sys_platform != 'darwin' or platform_machine != 'arm64'",
+    "faster-whisper==1.2.1; sys_platform != 'darwin' or platform_machine != 'arm64'",
+    # everyone
+    "numpy",
+    "numba; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "scipy; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "huggingface_hub",
+    "imageio-ffmpeg==0.6.0",
+    "whisper-normalizer==0.1.15",
+    "wordfreq==3.1.1",
+    "jellyfish==1.2.1",
+    "yt-dlp[default]",
+    "curl_cffi",
+    "pip",
+    "fastapi==0.143.0",
+    "uvicorn[standard]==0.54.0",
+    "python-multipart",
+    "python-docx==1.2.0",
+    "reportlab==5.0.1",
+    "pillow",
+]
+
+[tool.uv]
+package = false
+# mlx-whisper lists PyTorch only for its model-conversion script; transcription never imports it (verified),
+# so leave out ~550 MB from every Mac download
+override-dependencies = ["torch; sys_platform == 'never'"]
